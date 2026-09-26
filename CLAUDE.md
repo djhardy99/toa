@@ -12,8 +12,13 @@ Go module `github.com/djhardy99/toa` (Go 1.22).
 
 ## Layout
 - `main.go`: entry point (move it to `cmd/toa/` if a second binary appears)
-- `internal/`: private packages (create as needed)
+- `core/`: the execution engine (`Guardrail` interface, `Input`/`Result`, `Engine`, registry). Users are not expected to edit it. Changes here affect every guardrail, so keep the public surface small and performance-sensitive paths allocation-conscious.
+- `lib/`: guardrail packages. This is the extension point users add to or edit. One package per guardrail (or family of guardrails). Each guardrail implements `core.Guardrail` and registers itself via `core.Register` in `init()`; see `lib/blocklist` as the template. `core/` must never import `lib/`.
 - `dev/`: local dev helpers that are not part of the repo
+
+## Architecture
+- Toa is a performance-focused guardrails executor: `core/` runs guardrails, `lib/` defines them.
+- Performance matters. Benchmark hot paths (`go test -bench`) and avoid unnecessary allocations, reflection, and global locks in `core/`.
 
 ## Conventions
 - Stick to the standard library unless a dependency clearly pays for itself; run `go mod tidy` after adding one.
