@@ -37,3 +37,7 @@ bin/
 # Personal Claude Code overrides
 .claude/settings.local.json
 CLAUDE.local.md
+
+# Runtime logs
+logs/
+*.log
