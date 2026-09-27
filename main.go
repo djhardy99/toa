@@ -1,17 +1,29 @@
 package main
 
 import (
+	"fmt"
+	"log/slog"
 	"net/http"
-
-	"github.com/djhardy99/toa/core/utils"
+	"os"
 )
 
+func NewLogger() *slog.Logger{
+	logger := slog.New(slog.NewJSONHandler(os.Stderr, nil))
+	return logger
+}
+
+func handleGetRequest(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Hello")
+}
+
 func main() {
-	logger := utils.NewLogger()
-	err := http.ListenAndServe(":4001", nil)
-	if err != nil {
-			logger.Error(err.Error())
+	var port int = 4001
+	logger := NewLogger()
+	logger.Info("starting server", "addr", fmt.Sprintf(":%d",port),"port",port)
+	mux := http.NewServeMux()
+	mux.HandleFunc("GET /", handleGetRequest)
+	if err := http.ListenAndServe(":4001", mux); err != nil {
+		logger.Error(err.Error())
 	}
-	logger.Info("Server started on port")
 }
 
