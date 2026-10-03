@@ -2,27 +2,28 @@ package main
 
 import (
 	"fmt"
-	"log/slog"
 	"net/http"
 	"os"
-)
 
-func NewLogger() *slog.Logger {
-	logger := slog.New(slog.NewJSONHandler(os.Stderr, nil))
-	return logger
-}
+	"github.com/djhardy99/toa/src/utils"
+)
 
 func handleGetRequest(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "Hello")
 }
 
 func main() {
-	var port int = 4001
-	logger := NewLogger()
-	logger.Info("starting server", "addr", fmt.Sprintf(":%d", port), "port", port)
+	logger := utils.NewLogger()
+	cfg, err := utils.LoadConfig("cfg/core.json")
+	if err != nil {
+		logger.Error(err.Error())
+		os.Exit(1)
+	}
+	addr := fmt.Sprintf(":%d", cfg.Port)
+	logger.Info("starting server", "addr", addr, "port", cfg.Port)
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /", handleGetRequest)
-	if err := http.ListenAndServe(":4001", mux); err != nil {
+	if err := http.ListenAndServe(addr, mux); err != nil {
 		logger.Error(err.Error())
 	}
 }
