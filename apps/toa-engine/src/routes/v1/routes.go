@@ -13,7 +13,5 @@ func NewHandler(log *slog.Logger) *Handler {
 	return &Handler{log: log}
 }
 
-func (h *Handler) Register(mux *http.ServeMux) {
-	mux.HandleFunc("GET /health", h.healthCheck)
-	mux.HandleFunc("GET /v1/inference", h.inference)
-}
+// Register adds the v1 routes to mux. Versioned API routes go here.
+func (h *Handler) Register(mux *http.ServeMux) {}
