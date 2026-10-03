@@ -2,21 +2,12 @@ package main
 
 import (
 	"fmt"
-	"log/slog"
 	"net/http"
 	"os"
 
+	v1 "github.com/djhardy99/toa/src/routes/v1"
 	"github.com/djhardy99/toa/src/utils"
 )
-
-type Server struct {
-	log *slog.Logger
-}
-
-func (s *Server) healthCheckRoute(w http.ResponseWriter, r *http.Request) {
-	s.log.Info("handling request", "method", r.Method, "path", r.URL.Path)
-	fmt.Fprint(w, "Ok")
-}
 
 func main() {
 	logger := utils.NewLogger()
@@ -27,9 +18,8 @@ func main() {
 	}
 	addr := fmt.Sprintf(":%d", cfg.Port)
 	logger.Info("starting server", "addr", addr, "port", cfg.Port)
-	srv := &Server{log: logger}
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /health", srv.healthCheckRoute)
+	v1.NewHandler(logger).Register(mux)
 	if err := http.ListenAndServe(addr, mux); err != nil {
 		logger.Error(err.Error())
 	}
