@@ -2,15 +2,17 @@
 
 Toa is designed to be a high performance guardrails as a service provider. This specfic component is designed to be the execution platform.
 
-Go module `github.com/djhardy99/toa` (Go 1.22).
+Monorepo: each app lives in `apps/<name>/` as its own Go module. Currently one app, `apps/toa-engine` (module `github.com/djhardy99/toa`, Go 1.22).
 
 ## Commands
+Run from the repo root; the root `Makefile` delegates to `apps/toa-engine`. Add new apps to its `APP` list.
 - `make run`: run the app
-- `make build`: build to `bin/toa`
+- `make build`: build to `apps/toa-engine/bin/toa`
 - `make test`: run all tests
 - `make check`: gofmt check + vet + tests. **Run this before calling any change done.**
 
 ## Layout
+Paths below are relative to `apps/toa-engine/` unless stated otherwise. `.claude/`, `CLAUDE.md` and `dev/` stay at the repo root.
 - `main.go`: entry point (move it to `cmd/toa/` if a second binary appears)
 - `core/`: the execution engine (`Guardrail` interface, `Input`/`Result`, `Engine`, registry). Users are not expected to edit it. Changes here affect every guardrail, so keep the public surface small and performance-sensitive paths allocation-conscious.
 - `lib/`: guardrail packages. This is the extension point users add to or edit. One package per guardrail (or family of guardrails). Each guardrail implements `core.Guardrail` and registers itself via `core.Register` in `init()`; see `lib/blocklist` as the template. `core/` must never import `lib/`.

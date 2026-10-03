@@ -1,22 +1,7 @@
 .PHONY: build run test fmt vet check
 
-build:
-	go build -o bin/toa .
+# Delegates to the toa-engine module. Add more apps here as they appear.
+APP := apps/toa-engine
 
-run:
-	go run .
-
-test:
-	go test ./...
-
-fmt:
-	gofmt -w .
-
-vet:
-	go vet ./...
-
-# Run before considering any change done.
-check:
-	@test -z "$$(gofmt -l .)" || (echo "gofmt needed on:"; gofmt -l .; exit 1)
-	go vet ./...
-	go test ./...
+build run test fmt vet check:
+	$(MAKE) -C $(APP) $@
