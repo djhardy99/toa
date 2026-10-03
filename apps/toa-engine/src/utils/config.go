@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 )
+
 type Config struct {
 	Port int `json:"port"`
 }
