@@ -15,4 +15,5 @@ func NewHandler(log *slog.Logger) *Handler {
 
 func (h *Handler) Register(mux *http.ServeMux) {
 	mux.HandleFunc("GET /health", h.healthCheck)
+	mux.HandleFunc("GET /v1/inference", h.inference)
 }
