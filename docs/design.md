@@ -135,19 +135,19 @@ Request: a list of guardrails, each with an immutable version.
 
 ## Implementation status
 
-Built, in `apps/toa-policy` (`npm run check`, 43 tests):
-- `src/schema.ts`: `PolicyVersion`, `GuardrailVersion`, lifecycle fields, `SplitConfig`, `DatasetRecord`, `Dataset`, with the invariants above (unique record ids, one split per group key).
-- `src/split.ts`: `splitFloat`, `pickSplit`, `assignSplit` (sticky, group-key inheriting).
+Schema design is in `docs/schemas.md`.
+
+`apps/toa-policy` is a bare TypeScript init project with no source. A first schema and split implementation (zod, 43 tests) was written and then removed on 2026-10-03. `docs/schemas.md` records it precisely enough to rebuild, along with the issues found in review.
 
 Built, in `apps/toa-engine`: config loading, JSON logging, `GET /health`, and a stub `inference` handler that is not registered yet. None of the engine call contract is implemented.
 
 **v1 scope**, thinnest path that proves the loop:
-1. Schema (done).
-2. Postgres and a minimal API: create and publish policy versions, ingest labeled records (calling `assignSplit`).
+1. Schema (specified in `docs/schemas.md`, not implemented).
+2. Postgres and a minimal API: create and publish policy versions, ingest labeled records (assigning splits at ingest).
 3. One engine endpoint following the call contract, with a fake judge first.
 4. An eval run: the worker sends a policy's test split to the dev engine and stores verdicts, with aggregate precision and recall.
 
-**Deferred past v1:** lifecycle and roadmap UI (the state fields exist in the schema), artifact store and signing (the engine can read published versions directly), OIDC and RBAC (start with the local admin), connectors (upload first), API-key allow-list, result caching, cost controls.
+**Deferred past v1:** lifecycle and roadmap UI (the state fields are in the schema spec), artifact store and signing (the engine can read published versions directly), OIDC and RBAC (start with the local admin), connectors (upload first), API-key allow-list, result caching, cost controls.
 
 ## Open questions
 
