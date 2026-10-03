@@ -47,3 +47,6 @@ dev/
 # Node
 node_modules/
 dist/
+
+# docs-sync hook state
+.claude/.docs-state/

@@ -137,7 +137,7 @@ Request: a list of guardrails, each with an immutable version.
 
 Schema design is in `docs/schemas.md`.
 
-`apps/toa-policy` is a bare TypeScript init project with no source. A first schema and split implementation (zod, 43 tests) was written and then removed on 2026-10-03. `docs/schemas.md` records it precisely enough to rebuild, along with the issues found in review.
+`apps/toa-policy` is **parked** as a bare TypeScript init project with no source. A first schema and split implementation (zod, 43 tests) was written and then removed on 2026-10-03. `docs/schemas.md` records it precisely enough to rebuild, along with the issues found in review.
 
 Built, in `apps/toa-engine`: config loading, JSON logging, `GET /health`, and a stub `inference` handler that is not registered yet. None of the engine call contract is implemented.
 

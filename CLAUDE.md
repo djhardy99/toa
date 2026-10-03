@@ -4,19 +4,26 @@ Toa is designed to be a high performance guardrails as a service provider. `toa-
 
 Monorepo: each app lives in `apps/<name>/` with its own toolchain. Apps:
 - `apps/toa-engine`: the Go executable that runs guardrails in production (module `github.com/djhardy99/toa`, Go 1.22).
-- `apps/toa-policy`: TypeScript app where people design guardrails (made of policies), build challenge datasets, and run representative data against projects to see the impact. Node 22, TypeScript 7.
+- `apps/toa-policy`: **parked.** Planned TypeScript app where people design guardrails (made of policies), build challenge datasets, and run representative data against projects to see the impact. Currently only a bare TypeScript init project (no source code).
 
-System design and decisions: `docs/design.md`. Read it before changing architecture. **Keep it and this file up to date**: update `docs/design.md` when a decision changes, and this file when commands, layout or conventions change.
+System design and decisions: `docs/design.md`. Schema design: `docs/schemas.md`. Read them before changing architecture. **Keep it and this file up to date**: update `docs/design.md` and `docs/schemas.md` when a decision changes, and this file when commands, layout or conventions change.
 
 ## Commands
 Go (run from the repo root; the root `Makefile` delegates to `apps/toa-engine`; add new Go apps to its `APP` line):
 - `make run`: run the engine
 - `make build`: build to `apps/toa-engine/bin/toa`
 - `make test`: run all Go tests
-- `make check`: gofmt check + vet + tests. **Run this before calling any engine change done.** It does not cover `toa-policy`.
+- `make docs-check`: verify CLAUDE.md and `docs/` still match the repo (`scripts/docs-check.sh`)
+- `make check`: docs-check + gofmt check + vet + tests. **Run this before calling any change done.** It does not cover `toa-policy`.
 
-TypeScript (run in `apps/toa-policy/`):
-- `npm run check`: typecheck + build + tests. **Run this before calling any toa-policy change done.**
+TypeScript: `apps/toa-policy` has no scripts or tests yet. Add a `check` script (typecheck + tests) with the first real code, and document it here.
+
+## Keeping docs current
+CLAUDE.md and `docs/` are the knowledge base for AI assistants working in this repo. They hold what the code cannot say (decisions and reasons, contracts, gotchas, commands); they do not copy code.
+- `scripts/docs-check.sh` (`make docs-check`): deterministic checks. Every app and doc is referenced here, every `make` target mentioned exists, doc links resolve, and the toa-engine layout bullets point at real paths (bullets marked "planned" are skipped).
+- `.claude/hooks/docs-sync.sh`: records files edited this turn; at the end of a turn, if code changed but no doc did, or `docs-check` fails, it asks for a sync. If no doc change is needed, say so in one line and stop.
+- `.claude/skills/sync-docs/`: the procedure for the update. Use it when the hook reports drift or when asked to refresh the docs.
+- Hook state lives in `.claude/.docs-state/` (gitignored).
 
 ## toa-engine
 Paths are relative to `apps/toa-engine/`. `.claude/`, `CLAUDE.md`, `docs/` and `dev/` stay at the repo root.
@@ -32,12 +39,9 @@ Paths are relative to `apps/toa-engine/`. `.claude/`, `CLAUDE.md`, `docs/` and `
 The engine's call contract (a list of `{guardrail, version}`, any block wins, fast and complete modes, `version_retired` as a 400) is specified in `docs/design.md` and is not implemented yet.
 
 ## toa-policy
-Concepts: a **Policy** is one measurable rule; a **Guardrail** is a set of policies (e.g. `security` = `no-data-leakage` + `no-secrets-leakage` + `no-system-prompt-leakage`). Both are immutable and versioned (`PolicyVersion`, `GuardrailVersion`) and have a lifecycle (`active`, `deprecated`, `retired`). A **Dataset** belongs to one policy and holds records plus a split config.
-- `src/schema.ts`: zod schemas and inferred types. This is the contract with `toa-engine`; change it deliberately and keep the Go side in sync.
-- `src/split.ts`: deterministic split assignment (hash of policy key plus group key or record id).
-- Invariants to preserve: a record's split is assigned once at ingest and stored (sticky); test records never move; a record with a group key inherits the group's stored split; group keys are immutable; policies reference judges by alias and never contain credentials.
-- Status: schema and split logic only. No database or API yet; the v1 plan is in `docs/design.md`.
-- Dependencies: zod only at runtime. Tests use `node:test` on the compiled `dist/`. TypeScript 7 does not auto-load `@types`, so `tsconfig.json` lists `"types": ["node"]`. Node 22.2 cannot take a directory for `node --test`, so the script passes a glob.
+Bare TypeScript init project: `package.json`, `tsconfig.json`, `typescript` and `@types/node` as dev dependencies, no source. The earlier schema and split code was removed on 2026-10-03; its full design is in `docs/schemas.md` and the rationale is in `docs/design.md`.
+- `tsconfig.json` lists `"types": ["node"]` because TypeScript 7 does not auto-load `@types`. It expects source in `src/`.
+- Known issues to fix in any rebuild are listed at the end of `docs/schemas.md` (including pinning `@types/node` to the Node 22 runtime).
 
 ## Architecture
 - Toa is a performance-focused guardrails executor: `core/` runs guardrails, `lib/` defines them.
@@ -47,5 +51,5 @@ Concepts: a **Policy** is one measurable rule; a **Guardrail** is a set of polic
 - Stick to the standard library unless a dependency clearly pays for itself; run `go mod tidy` after adding a Go dependency.
 - Wrap errors with context: `fmt.Errorf("doing x: %w", err)`. Don't panic in library code.
 - Inject dependencies by hand: `main` builds the logger once and passes it into structs via fields (see `v1.Handler`); handlers are methods on the struct. No DI frameworks. Don't log on `core/` hot paths; return results/errors and let the caller log.
-- Table-driven tests in `_test.go` files (Go) or `*.test.ts` files (TypeScript) next to the code they test.
-- Formatting: a hook runs `gofmt` after every edit. TypeScript has no formatter configured.
+- Table-driven tests in `_test.go` files next to the code they test.
+- Formatting is automatic for Go: a hook runs `gofmt` after every edit. TypeScript has no formatter configured.
