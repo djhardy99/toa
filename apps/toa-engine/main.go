@@ -13,7 +13,7 @@ type Server struct {
 	log *slog.Logger
 }
 
-func (s *Server) handleGetRequest(w http.ResponseWriter, r *http.Request) {
+func (s *Server) healthCheckRoute(w http.ResponseWriter, r *http.Request) {
 	s.log.Info("handling request", "method", r.Method, "path", r.URL.Path)
 	fmt.Fprint(w, "Ok")
 }
@@ -29,7 +29,7 @@ func main() {
 	logger.Info("starting server", "addr", addr, "port", cfg.Port)
 	srv := &Server{log: logger}
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /health", srv.handleGetRequest)
+	mux.HandleFunc("GET /health", srv.healthCheckRoute)
 	if err := http.ListenAndServe(addr, mux); err != nil {
 		logger.Error(err.Error())
 	}
