@@ -126,7 +126,7 @@ Table-driven, using `node:test`. Worth reproducing:
 Found in review of the removed code. Fix them in any rebuild.
 
 1. **Record ids were too strict.** `DatasetRecord.id` reused the kebab-case id type. Real ids (UUIDs, S3 keys, uppercase, underscores, dots) would be rejected at ingestion. Use a non-empty string with a length limit.
-2. **`@types/node` was version 26 while the runtime was Node 22.2.** Pin the types to the runtime's major version and add an `engines` field.
-3. **Stale compiled output could run as tests.** `tsc` never deletes old files, so a renamed or deleted test could still run from `dist/`. Delete `dist` before building.
+2. **`@types/node` was version 26 while the runtime was Node 22.2.** Fixed in the new init project (types pinned to 22, `engines` set).
+3. **Stale compiled output could run as tests.** `tsc` never deletes old files, so a renamed or deleted test could still run from `dist/`. The new `build` script deletes `dist` first; keep that when tests are added.
 4. **Group lookup was a linear scan.** In the database, index (policy, group key).
 5. **Concurrent first ingests of one group** could pick different splits if the cutoffs changed between them. Store the group's split under a unique constraint on (policy, group key).

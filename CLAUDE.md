@@ -16,7 +16,7 @@ Go (run from the repo root; the root `Makefile` delegates to `apps/toa-engine`; 
 - `make docs-check`: verify CLAUDE.md and `docs/` still match the repo (`scripts/docs-check.sh`)
 - `make check`: docs-check + gofmt check + vet + tests. **Run this before calling any change done.** It does not cover `toa-policy`.
 
-TypeScript: `apps/toa-policy` has no scripts or tests yet. Add a `check` script (typecheck + tests) with the first real code, and document it here.
+TypeScript (run in `apps/toa-policy/`): `npm run check` (typecheck), `npm run build` (clean build to `dist/`). No tests yet; add them to `check` with the first real code. Not covered by `make check`.
 
 ## Keeping docs current
 CLAUDE.md and `docs/` are the knowledge base for AI assistants working in this repo. They hold what the code cannot say (decisions and reasons, contracts, gotchas, commands); they do not copy code.
@@ -39,9 +39,9 @@ Paths are relative to `apps/toa-engine/`. `.claude/`, `CLAUDE.md`, `docs/` and `
 The engine's call contract (a list of `{guardrail, version}`, any block wins, fast and complete modes, `version_retired` as a 400) is specified in `docs/design.md` and is not implemented yet.
 
 ## toa-policy
-Bare TypeScript init project: `package.json`, `tsconfig.json`, `typescript` and `@types/node` as dev dependencies, no source. The earlier schema and split code was removed on 2026-10-03; its full design is in `docs/schemas.md` and the rationale is in `docs/design.md`.
-- `tsconfig.json` lists `"types": ["node"]` because TypeScript 7 does not auto-load `@types`. It expects source in `src/`.
-- Known issues to fix in any rebuild are listed at the end of `docs/schemas.md` (including pinning `@types/node` to the Node 22 runtime).
+Bare TypeScript init project, parked. `package.json` (scripts `build`, `typecheck`, `check`; Node >=22), `tsconfig.json` (strict, NodeNext, source in `src/`, output in `dist/`), and an empty `src/index.ts`. Dev dependencies only: `typescript` and `@types/node` pinned to major 22 to match the runtime.
+- `tsconfig.json` lists `"types": ["node"]` because TypeScript 7 does not auto-load `@types`.
+- The earlier schema and split code was removed; its design is in `docs/schemas.md` and the rationale in `docs/design.md`. Known issues to fix in any rebuild are at the end of `docs/schemas.md`.
 
 ## Architecture
 - Toa is a performance-focused guardrails executor: `core/` runs guardrails, `lib/` defines them.
