@@ -2,13 +2,19 @@ package main
 
 import (
 	"fmt"
+	"log/slog"
 	"net/http"
 	"os"
 
 	"github.com/djhardy99/toa/src/utils"
 )
 
-func handleGetRequest(w http.ResponseWriter, r *http.Request) {
+type Server struct {
+	log *slog.Logger
+}
+
+func (s *Server) handleGetRequest(w http.ResponseWriter, r *http.Request) {
+	s.log.Info("handling request", "method", r.Method, "path", r.URL.Path)
 	fmt.Fprint(w, "Hello")
 }
 
@@ -21,8 +27,9 @@ func main() {
 	}
 	addr := fmt.Sprintf(":%d", cfg.Port)
 	logger.Info("starting server", "addr", addr, "port", cfg.Port)
+	srv := &Server{log: logger}
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /", handleGetRequest)
+	mux.HandleFunc("GET /", srv.handleGetRequest)
 	if err := http.ListenAndServe(addr, mux); err != nil {
 		logger.Error(err.Error())
 	}
