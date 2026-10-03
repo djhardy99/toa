@@ -15,7 +15,7 @@ type Server struct {
 
 func (s *Server) handleGetRequest(w http.ResponseWriter, r *http.Request) {
 	s.log.Info("handling request", "method", r.Method, "path", r.URL.Path)
-	fmt.Fprint(w, "Hello")
+	fmt.Fprint(w, "Ok")
 }
 
 func main() {
@@ -29,7 +29,7 @@ func main() {
 	logger.Info("starting server", "addr", addr, "port", cfg.Port)
 	srv := &Server{log: logger}
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /", srv.handleGetRequest)
+	mux.HandleFunc("GET /health", srv.handleGetRequest)
 	if err := http.ListenAndServe(addr, mux); err != nil {
 		logger.Error(err.Error())
 	}
