@@ -44,3 +44,6 @@ logs/
 
 # Dev
 dev/
+# Node
+node_modules/
+dist/
