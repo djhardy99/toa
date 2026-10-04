@@ -5,6 +5,12 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "hf>=1.33.0",
     "ipython>=9.17.1",
+    "matplotlib>=3.11.2",
+    "onnx>=1.23.1",
+    "onnxconverter-common>=1.16.0",
+    "onnxruntime>=1.30.0",
     "setfit>=1.2.0",
+    "skl2onnx>=1.20.0",
 ]
