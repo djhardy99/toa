@@ -1,6 +1,6 @@
 # Toa system design (v1 draft)
 
-Status: draft, last updated 2026-10-03. Decisions are recorded as decided; anything unresolved is under [Open questions](#open-questions). What is built so far is under [Implementation status](#implementation-status).
+Status: draft, last updated 2026-10-04. Decisions are recorded as decided; anything unresolved is under [Open questions](#open-questions). What is built so far is under [Implementation status](#implementation-status).
 
 ## Components
 
@@ -103,6 +103,26 @@ Request: a list of guardrails, each with an immutable version.
 - Lifecycle state and dates travel in the artifact manifest.
 - Which versions a given caller may request beyond lifecycle state (allow-list per API key) is open.
 
+### Guardrail bundles and stages
+A guardrail version is shipped as one **bundle**: an archive holding a `manifest.json` plus the files its stages need. Adding a guardrail means shipping a bundle, not changing the engine.
+
+```
+jailbreak-v3.tar.gz
+├── manifest.json     # name, version, schema version, lifecycle, stages, sha256 of every file
+├── rules.json        # regex patterns
+├── model.onnx        # classifier (and its tokenizer.json)
+└── judge.prompt      # LLM prompt and judge alias
+```
+
+- **Manifest is the contract.** It names the guardrail and version, lists the stages in order with their config and thresholds, and carries a SHA-256 for every file. The engine refuses a bundle whose hashes do not match. This is the artifact described under Publishing, so the lifecycle fields and schema version live here too.
+- **Stages are built by a factory.** Each entry in the manifest's `stages` list has a `type` (`regex`, `model`, `ner`, `judge`, and so on). The engine keeps a registry mapping a type name to a constructor that takes the stage's config and the bundle's files and returns a stage. An unknown type refuses the bundle at load time, not at request time. Combinations are ordered lists of stages (regex, then model, then judge), never a combined type name such as `regex+model+judge`, so a new combination needs no new code.
+- **Cascade, cheapest first.** Stages run in order and stop early. Regex hits block immediately. A model score below a low threshold allows and above a high threshold blocks. Only the band in between escalates to the next stage, usually the LLM judge. Most traffic never reaches the judge. Thresholds are manifest config.
+- **A stage returns findings, not only a score.** A finding is a type, a character span and a score, plus an optional overall score for the input. A rule in the manifest maps findings to an action (for example, `SSN` at any score blocks, `PERSON` above 0.85 redacts). v1 verdicts stay `allow` or `block`. `redact` comes later with NER, but the stage output shape is fixed now because bundles make it expensive to change.
+- **Model stages.** Classifier and NER models are ONNX. Running them in-process (`onnxruntime_go`, which needs cgo, plus a Go tokenizer) or in a sidecar over HTTP or gRPC is undecided, so model stages sit behind a small interface (`Score(ctx, text)`) and can be swapped. A fake scorer comes first.
+- **NER for PII is planned, not in v1.** Regex covers structured types (email, phone, SSN, cards with a Luhn check) and runs first. NER covers free-form types (names, organizations, addresses). The bundle ships the token-classification model, its tokenizer and a label map, and the manifest declares the entity types and per-type thresholds. Findings return types and offsets, never the matched text, unless the caller asked for redaction.
+- **Pure Go guardrails remain possible** for cases no stage type covers. They register through `core.Register` in `src/lib/`, as in `CLAUDE.md`.
+- Large models can be referenced by hash and fetched into a shared cache, so bundles stay small.
+
 ### Data
 - **Ingestor**: people input records (challenge cases, labels) through the ingestor. It is the only place records are written. There is no push API for customer apps: data comes from people through the ingestor, and from connectors.
 - **Challenge datasets** are stored by Toa, hand-labeled, and kept forever.
@@ -144,10 +164,10 @@ Built, in `apps/toa-engine`: config loading, JSON logging, `GET /health`, and a 
 **v1 scope**, thinnest path that proves the loop:
 1. Schema (specified in `docs/schemas.md`, not implemented).
 2. Postgres and a minimal API: create and publish policy versions, ingest labeled records (assigning splits at ingest).
-3. One engine endpoint following the call contract, with a fake judge first.
+3. One engine endpoint following the call contract, with a fake judge first. The first guardrail is `jailbreak`: a regex stage, then a fake model scorer, loaded from a bundle through the stage factory.
 4. An eval run: the worker sends a policy's test split to the dev engine and stores verdicts, with aggregate precision and recall.
 
-**Deferred past v1:** lifecycle and roadmap UI (the state fields are in the schema spec), artifact store and signing (the engine can read published versions directly), OIDC and RBAC (start with the local admin), connectors (upload first), API-key allow-list, result caching, cost controls.
+**Deferred past v1:** NER and PII, `redact` verdicts, real ONNX model stages, the LLM judge stage, lifecycle and roadmap UI (the state fields are in the schema spec), artifact store and signing (the engine can read published versions directly), OIDC and RBAC (start with the local admin), connectors (upload first), API-key allow-list, result caching, cost controls.
 
 ## Open questions
 
