@@ -50,3 +50,5 @@ dist/
 
 # docs-sync hook state
 .claude/.docs-state/
+# artefacts
+target/
