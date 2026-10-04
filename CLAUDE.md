@@ -32,7 +32,7 @@ Paths are relative to `apps/toa-engine/`. `.claude/`, `CLAUDE.md`, `docs/` and `
 - `cfg/core.json`: runtime config (currently `{"port": 4001}`). The path is relative to the working directory, so run from `apps/toa-engine/` (`make run` does this).
 - `src/utils/`: `config.go` (`Config`, `LoadConfig`) and `logger.go` (`NewLogger`, JSON `slog` to stderr). Candidate to split into `config` and `logging` packages.
 - `src/routes/health/`: `GET /health`, registered once at the root, no logger.
-- `src/routes/v1/`: versioned API. `Handler` holds the logger. `inference.go` exists but is not registered yet.
+- `src/routes/v1/`: versioned API. `Handler` holds the logger. `inference.go` is registered as `POST /v1/inference` (still a stub).
 - `src/core/`: (planned, empty) the execution engine (`Guardrail` interface, `Input`/`Result`, `Engine`, registry). Users are not expected to edit it. Changes here affect every guardrail, so keep the public surface small and performance-sensitive paths allocation-conscious.
 - `src/lib/`: (planned) guardrail packages. This is the extension point users add to or edit. One package per guardrail (or family of guardrails). Each guardrail implements `core.Guardrail` and registers itself via `core.Register` in `init()`; see `lib/jailbreak` as the template. `core/` must never import `lib/`.
 - `dev/`: local dev helpers that are not part of the repo.
