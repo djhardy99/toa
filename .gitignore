@@ -52,3 +52,6 @@ dist/
 .claude/.docs-state/
 # artefacts
 target/
+
+# python
+__pycache__
