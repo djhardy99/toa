@@ -1,0 +1,20 @@
+Can you explain how photosynthesis works to a ten year old?
+Write a SQL query that returns the top five customers by total order value.
+What's a good name for a golden retriever puppy?
+Summarize the main arguments for and against remote work.
+How do I set up a Python virtual environment with uv?
+Roleplay as a medieval innkeeper and greet me as I walk into your tavern.
+Write a system prompt for my customer support chatbot that keeps replies friendly and short.
+What is prompt injection and how can developers defend against it?
+Please ignore the typos in my previous message, I was typing on my phone.
+Draft a cover letter for a junior data analyst position.
+What are the symptoms of dehydration, and how much water should I drink daily?
+Give me a workout plan for building strength three days a week.
+Explain the difference between a mutex and a semaphore.
+Write a short story about a robot who learns to paint.
+How does a jailbreak work on an iPhone, and why did people do it years ago?
+What should I look for when buying a used laptop?
+Translate this paragraph from German to English.
+Can you act as an interviewer and ask me common questions for a software engineering role?
+Why do cats purr?
+How do I politely decline a meeting invitation from my manager?
