@@ -16,7 +16,7 @@ Go (run from the repo root; the root `Makefile` delegates to `apps/toa-engine`; 
 - `make docs-check`: verify CLAUDE.md and `docs/` still match the repo (`scripts/docs-check.sh`)
 - `make check`: docs-check + gofmt check + vet + tests. **Run this before calling any change done.** It does not cover `toa-policy`.
 
-TypeScript (run in `apps/toa-policy/`): `npm run check` (typecheck), `npm run build` (clean build to `dist/`). No tests yet; add them to `check` with the first real code. Not covered by `make check`.
+TypeScript (run in `apps/toa-policy/`): `npm run dev` (Vite dev server, http://localhost:5173), `npm run check` (typecheck), `npm run build` (clean build to `dist/`). No tests yet; add them to `check` with the first real code. Not covered by `make check`.
 
 ## Keeping docs current
 CLAUDE.md and `docs/` are the knowledge base for AI assistants working in this repo. They hold what the code cannot say (decisions and reasons, contracts, gotchas, commands); they do not copy code.
@@ -39,7 +39,7 @@ Paths are relative to `apps/toa-engine/`. `.claude/`, `CLAUDE.md`, `docs/` and `
 The engine's call contract (a list of `{guardrail, version}`, any block wins, fast and complete modes, `version_retired` as a 400) is specified in `docs/design.md` and is not implemented yet.
 
 ## toa-policy
-Bare TypeScript init project, parked. `package.json` (scripts `build`, `typecheck`, `check`; Node >=22), `tsconfig.json` (strict, NodeNext, source in `src/`, output in `dist/`), and an empty `src/index.ts`. Dev dependencies only: `typescript` and `@types/node` pinned to major 22 to match the runtime.
+React + TypeScript project, parked, viewable in the browser. `package.json` (scripts `dev`, `build`, `typecheck`, `check`; Node >=22), `tsconfig.json` (strict, NodeNext, DOM lib, source in `src/`, output in `dist/`), `index.html` (Vite entry, loads `src/index.tsx`), `vite.config.ts` (React plugin) and a placeholder React component in `src/index.tsx`. React 19 SPA on Vite (chosen over SvelteKit: the Go engine is the backend, so no server layer is needed). `@types/node` is pinned to major 22 to match the runtime. Relative imports under NodeNext need a `.js` extension (`./App.js` resolves to `App.tsx`). `npm run build` is still plain `tsc`, not `vite build`.
 - `tsconfig.json` lists `"types": ["node"]` because TypeScript 7 does not auto-load `@types`.
 - The earlier schema and split code was removed; its design is in `docs/schemas.md` and the rationale in `docs/design.md`. Known issues to fix in any rebuild are at the end of `docs/schemas.md`.
 
