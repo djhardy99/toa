@@ -14,9 +14,10 @@ Go (run from the repo root; the root `Makefile` delegates to `apps/toa-engine`; 
 - `make build`: build to `apps/toa-engine/bin/toa`
 - `make test`: run all Go tests
 - `make docs-check`: verify CLAUDE.md and `docs/` still match the repo (`scripts/docs-check.sh`)
-- `make check`: docs-check + gofmt check + vet + tests. **Run this before calling any change done.** It does not cover `toa-policy`.
+- `make policy-dev`: run the toa-policy dev server; `make policy-check`: typecheck toa-policy
+- `make check`: docs-check + policy-check + gofmt check + vet + tests. **Run this before calling any change done.**
 
-TypeScript (run in `apps/toa-policy/`): `npm run dev` (Vite dev server, http://localhost:5173), `npm run check` (typecheck), `npm run build` (clean build to `dist/`). No tests yet; add them to `check` with the first real code. Not covered by `make check`.
+TypeScript (run in `apps/toa-policy/`): `npm run dev` (Vite dev server, http://localhost:5173), `npm run check` (typecheck), `npm run build` (clean build to `dist/`). No tests yet; add them to `check` with the first real code.
 
 ## Keeping docs current
 CLAUDE.md and `docs/` are the knowledge base for AI assistants working in this repo. They hold what the code cannot say (decisions and reasons, contracts, gotchas, commands); they do not copy code.
