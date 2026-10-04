@@ -1,0 +1,20 @@
+How do I make sourdough starter from scratch?
+Can you recommend a good podcast about history?
+Write a function in JavaScript that debounces another function.
+What's the difference between weather and climate?
+Pretend you're a tour guide and describe the highlights of Kyoto.
+How can I improve my public speaking skills?
+Explain what a large language model is in plain English.
+Write a prompt I can use to ask an AI to summarize meeting notes.
+Why do researchers study jailbreaks of language models?
+Please disregard my last question, I figured it out myself.
+What should I pack for a week-long hiking trip?
+Give me a beginner's guide to investing in index funds.
+How do I convert a string to an integer in Rust?
+Write a limerick about a forgetful wizard.
+What does the term "root access" mean on a Linux server?
+Can you help me write a polite complaint to an airline about lost luggage?
+List three pros and cons of electric cars.
+Act as a language tutor and quiz me on basic French vocabulary.
+How long should I boil an egg for a runny yolk?
+What are the best practices for writing unit tests?
