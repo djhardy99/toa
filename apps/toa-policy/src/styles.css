@@ -3,13 +3,13 @@
 :root {
   color-scheme: light dark;
 
-  --bg: light-dark(#ffffff, #0f1114);
-  --surface: light-dark(#f6f7f9, #171a1e);
-  --text: light-dark(#1a1d21, #e6e8eb);
-  --muted: light-dark(#5f6872, #9aa3ad);
-  --border: light-dark(#e1e4e8, #2a2f36);
+  --bg: light-dark(#ffffff, #0d0e10);
+  --surface: light-dark(#f7f7f8, #141518);
+  --text: light-dark(#1b1c1f, #e8e9eb);
+  --muted: light-dark(#6b6f76, #8a8f98);
+  --border: light-dark(#e6e7e9, #23252a);
   --accent: light-dark(#0b5fff, #5b92ff);
-  --accent-text: light-dark(#ffffff, #0f1114);
+  --accent-text: light-dark(#ffffff, #0d0e10);
 
   --ok-bg: light-dark(#e6f2ea, #16301f);
   --ok-text: light-dark(#1d5b32, #8fd0a4);
@@ -18,11 +18,11 @@
   --bad-bg: light-dark(#f8e3e1, #3b1d1a);
   --bad-text: light-dark(#8a2a22, #eb9a92);
 
-  --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
   --text-xs: 12px;
-  --text-sm: 14px;
+  --text-sm: 13px;
   --text-md: 16px;
   --text-lg: 20px;
 
@@ -54,7 +54,8 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font: var(--text-sm) / 1.5 var(--font);
+  font: var(--text-sm) / 1.4 var(--font);
+  -webkit-font-smoothing: antialiased;
 }
 
 #app {
@@ -66,7 +67,8 @@ body {
 h1,
 h2 {
   margin: 0;
-  font-weight: 600;
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }
 h1 {
   font-size: var(--text-lg);
@@ -114,6 +116,10 @@ code,
   font: inherit;
   font-weight: 500;
   cursor: pointer;
+  transition: background 150ms;
+}
+.button:hover:not(:disabled) {
+  background: var(--surface);
 }
 .button:disabled {
   color: var(--muted);
@@ -123,6 +129,10 @@ code,
   border-color: var(--accent);
   background: var(--accent);
   color: var(--accent-text);
+}
+.button-primary:hover:not(:disabled) {
+  background: var(--accent);
+  filter: brightness(1.1);
 }
 .button-primary:disabled {
   opacity: 0.5;
@@ -154,6 +164,9 @@ td {
   border-bottom: 1px solid var(--border);
   text-align: left;
   vertical-align: top;
+}
+tbody tr:hover td {
+  background: var(--surface);
 }
 th {
   color: var(--muted);
