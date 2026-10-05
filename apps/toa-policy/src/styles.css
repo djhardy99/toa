@@ -1,21 +1,22 @@
-/* Design tokens. Everything below uses these, never raw values. */
+/* Design tokens. Everything below uses these, never raw values.
+   light-dark() picks by color-scheme: the OS setting, or data-theme on <html> when the toggle is used. */
 :root {
   color-scheme: light dark;
 
-  --bg: #ffffff;
-  --surface: #f6f7f9;
-  --text: #1a1d21;
-  --muted: #5f6872;
-  --border: #e1e4e8;
-  --accent: #0b5fff;
-  --accent-text: #ffffff;
+  --bg: light-dark(#ffffff, #0f1114);
+  --surface: light-dark(#f6f7f9, #171a1e);
+  --text: light-dark(#1a1d21, #e6e8eb);
+  --muted: light-dark(#5f6872, #9aa3ad);
+  --border: light-dark(#e1e4e8, #2a2f36);
+  --accent: light-dark(#0b5fff, #5b92ff);
+  --accent-text: light-dark(#ffffff, #0f1114);
 
-  --ok-bg: #e6f2ea;
-  --ok-text: #1d5b32;
-  --warn-bg: #fbf0d9;
-  --warn-text: #7a5200;
-  --bad-bg: #f8e3e1;
-  --bad-text: #8a2a22;
+  --ok-bg: light-dark(#e6f2ea, #16301f);
+  --ok-text: light-dark(#1d5b32, #8fd0a4);
+  --warn-bg: light-dark(#fbf0d9, #3a2d10);
+  --warn-text: light-dark(#7a5200, #e5bd68);
+  --bad-bg: light-dark(#f8e3e1, #3b1d1a);
+  --bad-text: light-dark(#8a2a22, #eb9a92);
 
   --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
@@ -36,23 +37,11 @@
   --max-width: 960px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0f1114;
-    --surface: #171a1e;
-    --text: #e6e8eb;
-    --muted: #9aa3ad;
-    --border: #2a2f36;
-    --accent: #5b92ff;
-    --accent-text: #0f1114;
-
-    --ok-bg: #16301f;
-    --ok-text: #8fd0a4;
-    --warn-bg: #3a2d10;
-    --warn-text: #e5bd68;
-    --bad-bg: #3b1d1a;
-    --bad-text: #eb9a92;
-  }
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 *,
@@ -84,6 +73,12 @@ h1 {
 }
 h2 {
   font-size: var(--text-md);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
 }
 
 a {
