@@ -161,6 +161,8 @@ Schema design is in `docs/schemas.md`.
 
 `apps/toa-policy` is **parked** as a bare TypeScript init project with no source. A first schema and split implementation (zod, 43 tests) was written and then removed on 2026-10-03. `docs/schemas.md` records it precisely enough to rebuild, along with the issues found in review.
 
+Built in `apps/toa-policy`: a React shell with a theme toggle, a login page and protected routes. The login is a **fake** (any username and password, kept in localStorage), so there is no real authentication or authorization yet. The planned auth (local admin first, then OIDC and RBAC) needs a server.
+
 Built, in `apps/toa-engine`: config loading, JSON logging, `GET /health`, and a stub `inference` handler that is not registered yet. None of the engine call contract is implemented.
 
 **v1 scope**, thinnest path that proves the loop:

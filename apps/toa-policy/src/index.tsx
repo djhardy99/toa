@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Link, Route, Routes } from "react-router";
+import { BrowserRouter, Link, Outlet, Route, Routes } from "react-router";
 import { About } from "./About.js";
+import { AuthProvider, RequireAuth, useAuth } from "./auth.js";
+import { Login } from "./Login.js";
 import { Logo } from "./Logo.js";
+import { Policies } from "./Policies.js";
 
 type Theme = "light" | "dark";
 
@@ -30,7 +33,8 @@ function ThemeToggle() {
   );
 }
 
-function App() {
+function Layout() {
+  const { user, logout } = useAuth();
   return (
     <>
       <div className="page-header">
@@ -42,18 +46,36 @@ function App() {
           <Link to="/">Policies</Link>
           <Link to="/about">About</Link>
         </nav>
-        <ThemeToggle />
+        <div className="nav">
+          <ThemeToggle />
+          <button className="button" onClick={logout}>
+            Sign out ({user})
+          </button>
+        </div>
       </div>
-      <Routes>
-        <Route path="/" element={<p className="muted">Policies will appear here.</p>} />
-        <Route path="/about" element={<About />} />
-      </Routes>
+      <Outlet />
     </>
+  );
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route element={<RequireAuth />}>
+        <Route element={<Layout />}>
+          <Route path="/" element={<Policies />} />
+          <Route path="/about" element={<About />} />
+        </Route>
+      </Route>
+    </Routes>
   );
 }
 
 createRoot(document.getElementById("app")!).render(
   <BrowserRouter>
-    <App />
+    <AuthProvider>
+      <App />
+    </AuthProvider>
   </BrowserRouter>,
 );
