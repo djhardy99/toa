@@ -1,0 +1,192 @@
+/* Design tokens. Everything below uses these, never raw values. */
+:root {
+  color-scheme: light dark;
+
+  --bg: #ffffff;
+  --surface: #f6f7f9;
+  --text: #1a1d21;
+  --muted: #5f6872;
+  --border: #e1e4e8;
+  --accent: #0b5fff;
+  --accent-text: #ffffff;
+
+  --ok-bg: #e6f2ea;
+  --ok-text: #1d5b32;
+  --warn-bg: #fbf0d9;
+  --warn-text: #7a5200;
+  --bad-bg: #f8e3e1;
+  --bad-text: #8a2a22;
+
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-md: 16px;
+  --text-lg: 20px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  --radius: 6px;
+  --max-width: 960px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1114;
+    --surface: #171a1e;
+    --text: #e6e8eb;
+    --muted: #9aa3ad;
+    --border: #2a2f36;
+    --accent: #5b92ff;
+    --accent-text: #0f1114;
+
+    --ok-bg: #16301f;
+    --ok-text: #8fd0a4;
+    --warn-bg: #3a2d10;
+    --warn-text: #e5bd68;
+    --bad-bg: #3b1d1a;
+    --bad-text: #eb9a92;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: var(--text-sm) / 1.5 var(--font);
+}
+
+#app {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-4);
+}
+
+h1,
+h2 {
+  margin: 0;
+  font-weight: 600;
+}
+h1 {
+  font-size: var(--text-lg);
+}
+h2 {
+  font-size: var(--text-md);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+code,
+.mono {
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Buttons */
+.button {
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+.button:disabled {
+  color: var(--muted);
+  cursor: not-allowed;
+}
+.button-primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-text);
+}
+.button-primary:disabled {
+  opacity: 0.5;
+  color: var(--accent-text);
+}
+
+/* Page header and section header */
+.page-header,
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.page-header {
+  margin-bottom: var(--space-6);
+}
+.section-header {
+  margin-bottom: var(--space-3);
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th,
+td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  color: var(--muted);
+  font-size: var(--text-xs);
+  font-weight: 500;
+}
+
+/* State badge */
+.badge {
+  display: inline-block;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius);
+  font-size: var(--text-xs);
+  font-weight: 500;
+}
+.badge-active {
+  background: var(--ok-bg);
+  color: var(--ok-text);
+}
+.badge-deprecated {
+  background: var(--warn-bg);
+  color: var(--warn-text);
+}
+.badge-retired {
+  background: var(--bad-bg);
+  color: var(--bad-text);
+}
+.badge-draft {
+  background: var(--surface);
+  color: var(--muted);
+}
