@@ -3,9 +3,9 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Link, Outlet, Route, Routes } from "react-router";
 import { About } from "./About.js";
 import { AuthProvider, RequireAuth, useAuth } from "./auth.js";
+import { Guardrails } from "./Guardrails.js";
 import { Login } from "./Login.js";
 import { Logo } from "./Logo.js";
-import { Policies } from "./Policies.js";
 
 type Theme = "light" | "dark";
 
@@ -43,7 +43,7 @@ function Layout() {
           toa-policy
         </h1>
         <nav className="nav">
-          <Link to="/">Policies</Link>
+          <Link to="/">Guardrails</Link>
           <Link to="/about">About</Link>
         </nav>
         <div className="nav">
@@ -64,7 +64,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route element={<RequireAuth />}>
         <Route element={<Layout />}>
-          <Route path="/" element={<Policies />} />
+          <Route path="/" element={<Guardrails />} />
           <Route path="/about" element={<About />} />
         </Route>
       </Route>
