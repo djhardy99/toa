@@ -35,6 +35,7 @@ Status: draft, last updated 2026-10-04. Decisions are recorded as decided; anyth
 - Judge endpoint is customer-configured (hosted API, cloud provider, or self-hosted model) so air-gapped installs work.
 - Auth: customer IdP via OIDC **and** a break-glass local admin, from day one. RBAC roles (author, publisher, viewer, admin).
 - Stack: TypeScript full-stack. zod schemas are shared between UI and API.
+- The toa-policy UI is a single-page app with client-side routes (`react-router`, clean paths like `/about`). Whatever serves it must return `index.html` for unknown paths, or a refresh on a deep link gives a 404.
 
 ### Storage
 - Postgres is the source of truth. It is also the job queue (`SELECT ... FOR UPDATE SKIP LOCKED`), so there is no second datastore to run.

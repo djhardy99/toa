@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
+import { BrowserRouter, Link, Route, Routes } from "react-router";
+import { About } from "./About.js";
 import { Logo } from "./Logo.js";
 
 type Theme = "light" | "dark";
@@ -30,14 +32,28 @@ function ThemeToggle() {
 
 function App() {
   return (
-    <div className="page-header">
-      <h1 className="brand">
-        <Logo />
-        toa-policy
-      </h1>
-      <ThemeToggle />
-    </div>
+    <>
+      <div className="page-header">
+        <h1 className="brand">
+          <Logo />
+          toa-policy
+        </h1>
+        <nav className="nav">
+          <Link to="/">Policies</Link>
+          <Link to="/about">About</Link>
+        </nav>
+        <ThemeToggle />
+      </div>
+      <Routes>
+        <Route path="/" element={<p className="muted">Policies will appear here.</p>} />
+        <Route path="/about" element={<About />} />
+      </Routes>
+    </>
   );
 }
 
-createRoot(document.getElementById("app")!).render(<App />);
+createRoot(document.getElementById("app")!).render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>,
+);
